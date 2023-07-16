@@ -12,7 +12,7 @@ export default function Home() {
 
   const obtenerArrivals = async () => {
     try {
-      const response = await fetch(process.env.LOCAL_URL);
+      const response = await fetch(process.env.LOCAL_URL + "/api/arribos");
       const arrivals = await response.json();
       const firstArrivalData = (arrivals.BE2002).slice(0, 5);
       setFirstArrival(firstArrivalData);
