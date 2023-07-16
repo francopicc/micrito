@@ -1,113 +1,117 @@
-import Image from 'next/image'
+"use client";
+import { useState, useEffect } from 'react';
+import { useSession } from "next-auth/react"
+import { useRouter } from 'next/navigation';
+
+
 
 export default function Home() {
+  const router = useRouter();
+  const { data: session, status } = useSession()
+  const [firstArrival, setFirstArrival] = useState(null);
+
+  const obtenerArrivals = async () => {
+    try {
+      const response = await fetch(process.env.LOCAL_URL);
+      const arrivals = await response.json();
+      const firstArrivalData = (arrivals.BE2002).slice(0, 5);
+      setFirstArrival(firstArrivalData);
+    } catch (error) {
+      console.error('Error al obtener los arribos:', error);
+    }
+  };
+
+  setInterval(() => {
+    router.replace('/', undefined, { scroll: false })
+  }, 60000)
+
+  useEffect(() => {
+    setInterval(() => {
+      if (session) {
+        obtenerArrivals();
+      }
+    }, 60000)
+    if(session) {
+      obtenerArrivals();
+    }
+  }, [session]);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main className="bg-[#202020]">
+      {
+        !session ? (
+          <>
+            <div className="text-start ml-[40px] mt-[120px]">
+              <h1 className="text-5xl font-extrabold text-white">Te damos la bienvenida a Micro</h1>
+              <p className="text-xl font-bold text-gray-300 ml-1 mt-1">La app mas avanzada a nivel de bondis 🚌🕐</p>
+            </div>
+            <div className="text-start ml-[40px] mt-[50px]">
+              <p className="text-lg font-bold text-gray-600">Elegi el servicio con el cual te vas a autenticar:</p>
+              <p className="text-xs mt-1 text-gray-200">Registrandote en Micro, se comprende que estas aceptando nuestros Terminos y Condiciones, junto a la Politica de Privacidad</p>
+              <div className="flex flex-row space-x-5 ">
+                <button className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-5 hover:bg-gray-800 transition-all">
+                  <i className="fa-brands fa-google mt-1"></i>
+                  <span className="font-semibold">Iniciar sesion con Google</span>
+                </button>
+                <button className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-5 hover:bg-gray-800 transition-all">
+                  <i className="fa-brands fa-twitter mt-1"></i>
+                  <span className="font-semibold">Iniciar sesion con Twitter</span>
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <nav className="flex justify-center text-center mt-5">
+              <input type="text" placeholder="Busca paradas, micros, etc." className="px-3 py-1 rounded w-96 bg-gray-700 text-white" />
+            </nav>
+            <div className="mt-[55px] ml-[45px]">
+              <h1 className="text-white font-extrabold text-4xl">Bienvenido {session.user.name}</h1>
+              <p className="font-bold text-lg text-gray-400">¿Que micros te vas a tomar el día de hoy?</p>
+            </div>
+            <div className="flex flex-row space-x-3 ml-[45px] mt-2 text-xs">
+              <a className="bg-gray-700 text-white p-1.5 px-3 rounded">Todas las paradas disponibles</a>
+              <a className="bg-gray-700 text-white p-1.5 px-3 rounded">Todos los micros disponibles</a>
+              <a className="bg-gray-700 text-white p-1.5 px-3 rounded">Paradas cercanas a ti</a>
+            </div>
+            <div className="mt-[55px] ml-[45px]">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-300">🏁 Tus paradas favoritas</h3>
+                <div className="mt-4 space-x-5 flex flex-row">
+                  <div className="bg-[#383838] w-64 p-2 rounded h-32 shadow">
+                    <h4 className="font-semibold text-white">BE2015 - 202</h4>
+                    <h5 className="font-semibold text-stone-300 mb-2 mt-1 text-xs">📍 Ubicada en Avenida Montevideo, Berisso.</h5>
+                    <p className="text-stone-400 font-semibold text-xs">🚩 Queda a 1km de tu ubicacion aproximadamente.</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-2xl font-semibold text-gray-300">🚌 Tus micros favoritos</h3>
+                <div className="mt-4 space-x-5 flex flex-row">
+                  <div className="bg-[#383838] w-64 p-2 rounded h-32 shadow">
+                    <h4 className="font-semibold text-white">202 - FX1</h4>
+                    <h5 className="font-semibold text-stone-300 mb-2 mt-1 text-xs"> 🧔 3288 CASTAGNANI</h5>
+                    <p className="text-stone-400 font-semibold text-xs">🕐 Pasando en aproximadamente 5 minutos por tu ubicacion</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8">
+                <h3 className="text-2xl font-semibold text-gray-300">🚏 Pasando ahora por BE2002</h3>
+                <div className="mt-4 space-x-5 flex flex-row">
+                  {firstArrival && firstArrival.map((arrival, key) => (
+                    <div className="bg-[#383838] w-64 p-2 rounded h-32 shadow" key={key}>
+                      <h4 className="font-semibold text-white">{arrival.descripcionCortaBandera}</h4>
+                      <h5 className="font-semibold text-stone-300 mb-2 mt-1 text-xs"> 🧔 {arrival.identificadorChofer}</h5>
+                      <p className="text-stone-400 font-semibold text-xs">🕐 {arrival.tiempoRestanteArribo}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )
+      }
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
     </main>
   )
 }
