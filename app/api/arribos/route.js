@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import cron from 'node-cron';
 
-const paradas = [
-  "BE2002",
-];
+let idParada = "";
 
 let cacheData = {}; // Caché compartida para almacenar los resultados de la solicitud
 let lastUpdated = null; // Última vez que se actualizó la caché
@@ -46,16 +44,9 @@ async function scrapeData(codigoLinea, idParada) {
 
 async function updateCache() {
   try {
-    const responses = await Promise.all(
-      paradas.map(parada => scrapeData(95, parada))
-    );
+    const responses = await scrapeData(95, idParada);
 
-    const newCacheData = {};
-    for (let i = 0; i < paradas.length; i++) {
-      newCacheData[paradas[i]] = responses[i];
-    }
-
-    cacheData = newCacheData; // Actualizar la caché compartida con los nuevos datos
+    cacheData[idParada] = responses; // Actualizar la caché compartida con los nuevos datos
     lastUpdated = new Date(); // Registrar la última vez que se actualizó la caché
   } catch (error) {
     console.error(error);
@@ -75,15 +66,24 @@ function startCacheRefresh() {
 export async function GET(request) {
   try {
     const currentTime = new Date();
-    const cacheTimeout = 60000; // 1 minuto en milisegundos
+    const cacheTimeout = 60000; // 1 minute in milliseconds
 
-    // Verificar si la caché compartida está vacía o si ha pasado 1 minuto desde la última actualización
+    // Get the query parameter 'parada' from the request URL
+    const { searchParams } = new URL(request.url);
+    idParada = searchParams.get('parada');
+
+    // Check if the cache is empty or if 1 minute has passed since the last update
     if (Object.keys(cacheData).length === 0 || lastUpdated === null || currentTime - lastUpdated > cacheTimeout) {
-      // Actualizar la caché compartida si está vacía o ha pasado 1 minuto
+      // Update the shared cache if it's empty or 1 minute has passed
       await updateCache();
     }
 
-    return NextResponse.json(cacheData);
+    // Check if the 'parada' query parameter is provided and exists in the cache
+    if (idParada && cacheData.hasOwnProperty(idParada)) {
+      return NextResponse.json(cacheData[idParada]);
+    } else {
+      return NextResponse.json({ error: 'Invalid or missing parada ID' }, { status: 400 });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
