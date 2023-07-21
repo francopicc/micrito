@@ -12,6 +12,7 @@ const Footer = () => {
                     <h4 className="text-white font-bold text-lg">Encontranos en:</h4>
                     <p>Instagram</p>
                     <p>Twitter</p>
+                    <p>Contacto</p>
                   </div>
         </footer>
     )
