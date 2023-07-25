@@ -11,8 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build:digitalocean": "yarn install --production=false && yarn run build && rm -rf node_modules && yarn install --production --frozen-lockfile",
+    "lint": "next lint"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^1.0.0",
