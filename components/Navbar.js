@@ -1,5 +1,7 @@
 import { signOut } from "next-auth/react"
 import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = ({ session }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,11 +11,7 @@ const Navbar = ({ session }) => {
     };
     return (
         <nav className="flex justify-center items-center text-center mt-5 space-x-5">
-              <input
-                type="text"
-                placeholder="Busca paradas, micros, etc."
-                className="px-3 py-1 rounded w-96 bg-gray-700 text-white"
-              />
+              <Link href="/"><Image src="/assets/micrito-logo.svg" width={100} height={100} className="invert hover:opacity-80 transition-all duration-300"/></Link>
               <div className="relative ml-3">
                 <div>
                   <button

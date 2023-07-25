@@ -47,18 +47,18 @@ export default function Home() {
         !session ? (
           <>
             <div className="text-start ml-[40px] mt-[120px]">
-              <h1 className="text-5xl font-extrabold text-white mt-3">Te damos la bienvenida a Micrito</h1>
+              <h1 className="text-5xl md:text-5xl font-extrabold text-white mt-3">Te damos la bienvenida a Micrito</h1>
               <p className="text-xl font-bold text-gray-300 ml-1 mt-1">La app mas avanzada a nivel de bondis 🚌🕐</p>
             </div>
-            <div className="text-start ml-[40px] mt-[50px]">
-              <p className="text-lg font-bold text-gray-600">Elegi el servicio con el cual te vas a autenticar:</p>
-              <p className="text-xs mt-1 text-gray-200">Registrandote en Micro, se comprende que estas aceptando nuestros Terminos y Condiciones, junto a la Politica de Privacidad</p>
-              <div className="flex flex-row space-x-5 ">
-                <button onClick={() => { signIn('google')}} className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-5 hover:bg-gray-800 transition-all">
+            <div className="text-start ml-[40px] mt-5 md:mt-[50px]">
+              <p className="text-lg font-bold text-gray-600 leading-6 mb-2">Elegi el servicio con el cual te vas a autenticar:</p>
+              <p className="w-10/12 text-xs md:mt-1 text-gray-200">Registrandote en Micrito, se comprende que estas aceptando nuestros Terminos y Condiciones, junto a la Politica de Privacidad</p>
+              <div className="flex flex-col mt-1 md:flex-row md:mt-[45px]">
+                <button onClick={() => { signIn('google')}} className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-2 md:mt-0 md:mr-2 hover:bg-gray-800 transition-all">
                   <i className="fa-brands fa-google mt-1"></i>
                   <span className="font-semibold">Iniciar sesion con Google</span>
                 </button>
-                <button onClick={() => { signIn('twitter')}} className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-5 hover:bg-gray-800 transition-all">
+                <button onClick={() => { signIn('twitter')}} className="flex flex-row space-x-2 text-white bg-gray-700 w-fit p-1.5 rounded px-4 mt-2 md:mt-0 hover:bg-gray-800 transition-all">
                   <i className="fa-brands fa-twitter mt-1"></i>
                   <span className="font-semibold">Iniciar sesion con Twitter</span>
                 </button>
@@ -68,14 +68,14 @@ export default function Home() {
         ) : (
           <>
             <Navbar session={session}/>
-            <div className="mt-[55px] ml-[45px]">
+            <div className="mt-[55px] ml-[30px] md:ml-[45px]">
               <h1 className="text-white font-extrabold text-4xl">Bienvenido {session.user.name}</h1>
               <p className="font-bold text-lg text-gray-400">¿Que micros te vas a tomar el día de hoy?</p>
             </div>
-            <div className="flex flex-row space-x-3 ml-[45px] mt-2 text-xs">
+            <div className="flex flex-row space-x-3 ml-[30px] md:ml-[45px] mt-2 text-xs">
               <Link className="bg-gray-700 text-white p-1.5 px-3 rounded hover:bg-gray-800 transition-all" href='/paradas'><p>Todas las paradas disponibles</p></Link>
             </div>
-            <div className="mt-[55px] ml-[45px]">
+            <div className="mt-[55px] ml-[30px] md:ml-[45px]">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-300">🏁 Tus paradas favoritas</h3>
                 <div className="mt-4 space-x-5 flex flex-row">
@@ -99,10 +99,10 @@ export default function Home() {
               <div className="mt-8">
                 <h3 className="text-2xl font-semibold text-gray-300">🚏 Pasando ahora por BE2002</h3>
                 <p className="text-stone-600 text-xs font-bold mt-1">Los valores son aproximativos, y pueden variar de entre 2 minutos a 5 minutos.</p>
-                <div className="mt-4 space-x-5 flex flex-row">
+                <div className="overflow-y-hidden overflow-x-auto scroll-mt-[50px] md:mt-4 space-x-5 flex flex-row mt-3">
                   {loading && <ArrivalSkeleton arrivals={5}/>}
                   {firstArrival && firstArrival.map((arrival, key) => (
-                    <div className="bg-[#383838] w-64 p-2 rounded h-32 shadow" key={key}>
+                    <div className="bg-[#383838] min-w-max h-28 md:w-64 p-2 rounded md:h-32 shadow" key={key}>
                       <h4 className="font-semibold text-white">{arrival.descripcionBandera}</h4>
                       <h5 className="font-semibold text-stone-300 mb-2 mt-1 text-xs"> 🧔 {arrival.identificadorChofer}</h5>
                       <p className="text-stone-400 font-semibold text-xs">🕐 {arrival.tiempoRestanteArribo}</p>

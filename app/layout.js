@@ -16,11 +16,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="bg-[#202020]">
       <Script src="https://kit.fontawesome.com/e80c9c3cc8.js" />
-      <body className={inter.className}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </body>
+      <AuthProvider>
+        <body className={inter.className}>
+            {children}
+        </body>
+      </AuthProvider>
     </html>
   )
 }
