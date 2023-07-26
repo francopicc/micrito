@@ -45,7 +45,7 @@ export default function Home() {
   }, [session]);
 
   useEffect(() => {
-    const interval = setInterval(obtenerArrivals, 60000);
+    const interval = setInterval(obtenerArrivals, 30000);
     return () => clearInterval(interval);
   }, [firstArrival]);
 
@@ -57,6 +57,7 @@ export default function Home() {
         !session ? (
           <>
             <div className="text-start ml-[40px] mt-[120px]">
+            <a href='https://cafecito.app/micrito' rel='noopener' target='_blank'><img width="140" srcset='https://cdn.cafecito.app/imgs/buttons/button_5.png 1x, https://cdn.cafecito.app/imgs/buttons/button_5_2x.png 2x, https://cdn.cafecito.app/imgs/buttons/button_5_3.75x.png 3.75x' src='https://cdn.cafecito.app/imgs/buttons/button_5.png' alt='Invitame un café en cafecito.app' /></a>
               <h1 className="text-5xl md:text-5xl font-extrabold text-white mt-3">Te damos la bienvenida a Micrito</h1>
               <p className="text-xl font-bold text-gray-300 ml-1 mt-1">La app mas avanzada a nivel de bondis 🚌🕐</p>
             </div>

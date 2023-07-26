@@ -21,7 +21,7 @@ export default function Paradas() {
 
   const obtenerParadas = async () => {
     try {
-      const response = await fetch(process.env.LOCAL_URL_FETCH + "api/paradas");
+      const response = await fetch(`https://micrito.vercel.app/api/paradas`);
       const arrivals = await response.json();
       if (response.ok) {
         isLoading(false);
@@ -70,7 +70,7 @@ export default function Paradas() {
           parada.
         </p>
       </div>
-      <div className="text-white ml-[30px] md:ml-[45px] w-[60rem]">
+      <div className="text-white ml-[30px] md:ml-[45px] w-[60rem] md:w-[110rem]">
         {/* Search bar */}
         <input
           type="text"
@@ -111,6 +111,7 @@ export default function Paradas() {
           )
         )}
       </div>
+      <Footer />
     </>
   );
 }
