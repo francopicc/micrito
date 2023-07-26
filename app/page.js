@@ -14,8 +14,18 @@ export default function Home() {
 
   const obtenerArrivals = async () => {
     try {
-      const response = await fetch(
-        'http://165.232.140.155:3000/api/hello?parada=BE2002'
+      const response = await fetch (
+        'http://165.232.140.155:3000/api/hello?parada=BE2002',
+        {
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+            "Host": "localhost:3000",
+            "vary": "Accept-Encoding",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
       );
       const arrivals = await response.json();
       if (response.ok) {
