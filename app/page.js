@@ -15,7 +15,7 @@ export default function Home() {
   const obtenerArrivals = async () => {
     try {
       const response = await fetch(
-        'http://localhost:3000/api/arribos?parada=BE2002'
+        'http://165.232.140.155:3000/api/hello?parada=BE2002'
       );
       const arrivals = await response.json();
       if (response.ok) {
