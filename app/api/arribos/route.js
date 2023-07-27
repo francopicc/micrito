@@ -10,44 +10,52 @@ let lastUpdated = null; // Última vez que se actualizó la caché
 const executablePath = await chromium.executablePath;
 
 async function scrapeData(codigoLinea, idParada) {
-  const browser = await chromium.puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: executablePath,
-    headless: true,
-    ignoreHTTPSErrors: true,
-  });
-  const page = await browser.newPage();
+  let browser;
+  try {
+    browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    });
+    const page = await browser.newPage();
 
-  await page.goto('https://cuandollega.smartmovepro.net/unionplatense/arribos/');
+    await page.goto('https://cuandollega.smartmovepro.net/unionplatense/arribos/');
 
-  const response = await page.evaluate(async (n, t) => {
-    function getArribos(codigoLinea, idParada) {
-      return fetch("https://cuandollega.smartmovepro.net/unionplatense/arribos/" + "?codLinea=" + codigoLinea + "&idParada=" + idParada, {
-        method: "POST",
-        headers: {
-          RequestVerificationToken: $('input[name="CSRF-TOKEN-CL-FORM"]').val(),
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          codLinea: codigoLinea,
-          idParada: idParada,
-        }),
-      }).then(response => {
-        if (!response.ok) {
-          throw new Error("No se encontraron arribos disponibles para esta parada. Código de respuesta: " + response.status);
-        }
-        return response.json();
-      });
+    const response = await page.evaluate(async (n, t) => {
+      function getArribos(codigoLinea, idParada) {
+        return fetch("https://cuandollega.smartmovepro.net/unionplatense/arribos/" + "?codLinea=" + codigoLinea + "&idParada=" + idParada, {
+          method: "POST",
+          headers: {
+            RequestVerificationToken: $('input[name="CSRF-TOKEN-CL-FORM"]').val(),
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            codLinea: codigoLinea,
+            idParada: idParada,
+          }),
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error("No se encontraron arribos disponibles para esta parada. Código de respuesta: " + response.status);
+          }
+          return response.json();
+        });
+      }
+
+      const data = await getArribos(n, t);
+      return data.arribos;
+    }, codigoLinea, idParada);
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    if (browser) {
+      await browser.close();
     }
-
-    const data = await getArribos(n, t);
-    return data.arribos;
-  }, codigoLinea, idParada);
-
-  await browser.close();
-
-  return response;
+  }
 }
 
 async function updateCache() {
