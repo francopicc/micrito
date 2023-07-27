@@ -20,7 +20,7 @@ export default function AcercaParada ({ params }) {
     const obtenerArrivals = async () => {
         try {
         const response = await fetch(
-            'http://localhost:3000/api/arribos?parada=' + params.parada
+            'http://146.190.139.198:3000/api/arribos?parada=' + params.parada
         );
         const arrivals = await response.json();
         if (response.ok) {
