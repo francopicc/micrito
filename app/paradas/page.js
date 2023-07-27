@@ -21,7 +21,7 @@ export default function Paradas() {
 
   const obtenerParadas = async () => {
     try {
-      const response = await fetch(`https://micrito.vercel.app/api/paradas`);
+      const response = await fetch(`http://localhost:3000/api/paradas`);
       const arrivals = await response.json();
       if (response.ok) {
         isLoading(false);
